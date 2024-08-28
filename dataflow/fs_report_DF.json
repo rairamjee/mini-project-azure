@@ -5,14 +5,46 @@
 		"typeProperties": {
 			"sources": [
 				{
+					"dataset": {
+						"referenceName": "fs_user_prep_sql",
+						"type": "DatasetReference"
+					},
 					"name": "source1"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
 			"scriptLines": [
-				"source(allowSchemaDrift: true,",
-				"     validateSchema: false) ~> source1"
+				"source(output(",
+				"          id as string,",
+				"          name as string,",
+				"          email as string,",
+				"          password as string,",
+				"          designation as string,",
+				"          roles as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"filter1 select(mapColumn(",
+				"          id,",
+				"          name,",
+				"          email,",
+				"          password,",
+				"          designation,",
+				"          roles",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 filter(roles==\"Admin\") ~> filter1"
 			]
 		}
 	}
