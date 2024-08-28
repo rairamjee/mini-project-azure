@@ -1,0 +1,16 @@
+{
+	"name": "fs_user_prep_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "fs_sql_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "prep",
+			"table": "users"
+		}
+	}
+}

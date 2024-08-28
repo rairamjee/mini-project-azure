@@ -1,0 +1,43 @@
+{
+	"name": "fs_raw_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "fs_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "inputmpfs"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "questionId",
+				"type": "String"
+			},
+			{
+				"name": "questionName",
+				"type": "String"
+			},
+			{
+				"name": "questionType",
+				"type": "String"
+			},
+			{
+				"name": "questionOption",
+				"type": "String"
+			},
+			{
+				"name": "surveyId",
+				"type": "String"
+			}
+		]
+	}
+}
