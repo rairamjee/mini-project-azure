@@ -1,0 +1,16 @@
+{
+	"name": "sc_product_list_prep_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sc_sql_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "prep",
+			"table": "productlist"
+		}
+	}
+}

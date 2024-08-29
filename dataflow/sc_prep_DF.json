@@ -1,0 +1,119 @@
+{
+	"name": "sc_prep_DF",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "sc_products_raw",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "sc_product_list_prep_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "sc_categories_list_prep_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "select3"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          Category as string,",
+				"          CategoryId as string,",
+				"          Subcategory as string,",
+				"          SubcategoryName as string,",
+				"          SubcategoryId as string,",
+				"          DepartmentCode as string,",
+				"          MinShipDays as string,",
+				"          MaxShipDays as string,",
+				"          SeriesCode as string,",
+				"          SeriesName as string,",
+				"          BrandCode as string,",
+				"          BrandName as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source1",
+				"source1 select(mapColumn(",
+				"          SeriesName,",
+				"          SeriesCode,",
+				"          SubcategoryId,",
+				"          DepartmentCode,",
+				"          BrandName,",
+				"          BrandCode,",
+				"          MinShipDays,",
+				"          MaxShipDays",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"source1 select(mapColumn(",
+				"          Category,",
+				"          CategoryId,",
+				"          Subcategory,",
+				"          SubcategoryName,",
+				"          SubcategoryId,",
+				"          SeriesCode,",
+				"          SeriesName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"select2 select(mapColumn(",
+				"          Category,",
+				"          CategoryId,",
+				"          Subcategory,",
+				"          SubcategoryName,",
+				"          SubcategoryId,",
+				"          SeriesCode,",
+				"          SeriesName",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"select3 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2"
+			]
+		}
+	}
+}

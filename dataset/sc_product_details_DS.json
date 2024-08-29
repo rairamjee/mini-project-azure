@@ -1,0 +1,21 @@
+{
+	"name": "sc_product_details_DS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sc_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Sheet1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "categories_subcategories_items.xlsx",
+				"container": "inputmpsc"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}
