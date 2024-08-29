@@ -1,0 +1,17 @@
+{
+	"name": "sc_sql_LS",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"server": "customer-order.database.windows.net",
+			"database": "customer-order",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "ramjee",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDQ3QjdGRTMwLTQwRjAtNEJGNC1CMkQ1LUJDMTY4QzE3Njk4MV80NWUyZTRiMi1iMTQxLTQyMGYtOTZhNC0yNjQwZjVlYWM1M2UiDQp9"
+		}
+	}
+}
