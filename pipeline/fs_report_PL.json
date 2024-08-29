@@ -1,9 +1,9 @@
 {
-	"name": "fs_prep_PL",
+	"name": "fs_report_PL",
 	"properties": {
 		"activities": [
 			{
-				"name": "Preparation",
+				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "fs_prep_DF",
+						"referenceName": "fs_report_DF",
 						"type": "DataFlowReference"
 					},
 					"compute": {

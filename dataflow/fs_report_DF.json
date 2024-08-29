@@ -10,15 +10,99 @@
 						"type": "DatasetReference"
 					},
 					"name": "source1"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_response_prep_sql",
+						"type": "DatasetReference"
+					},
+					"name": "source2"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_surveys_prep_sql",
+						"type": "DatasetReference"
+					},
+					"name": "source3"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_surveys_prep_sql",
+						"type": "DatasetReference"
+					},
+					"name": "source4"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_response_prep_sql",
+						"type": "DatasetReference"
+					},
+					"name": "source6"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "fs_user_admin_report_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_user_users_report_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sink2"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_user_response_report_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sink3"
+				},
+				{
+					"dataset": {
+						"referenceName": "fs_survey_response_report_sql",
+						"type": "DatasetReference"
+					},
+					"name": "sink4"
+				}
+			],
 			"transformations": [
 				{
 					"name": "select1"
 				},
 				{
 					"name": "filter1"
+				},
+				{
+					"name": "filter2"
+				},
+				{
+					"name": "select2"
+				},
+				{
+					"name": "join1"
+				},
+				{
+					"name": "select3"
+				},
+				{
+					"name": "aggregate1"
+				},
+				{
+					"name": "select4"
+				},
+				{
+					"name": "join2"
+				},
+				{
+					"name": "select5"
+				},
+				{
+					"name": "aggregate2"
 				}
 			],
 			"scriptLines": [
@@ -34,6 +118,46 @@
 				"     validateSchema: false,",
 				"     isolationLevel: 'READ_UNCOMMITTED',",
 				"     format: 'table') ~> source1",
+				"source(output(",
+				"          id as string,",
+				"          userId as string,",
+				"          surveyId as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source2",
+				"source(output(",
+				"          surveyId as string,",
+				"          surveyName as string,",
+				"          surveyDescription as string,",
+				"          startDate as string,",
+				"          endDate as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source3",
+				"source(output(",
+				"          surveyId as string,",
+				"          surveyName as string,",
+				"          surveyDescription as string,",
+				"          startDate as string,",
+				"          endDate as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source4",
+				"source(output(",
+				"          id as string,",
+				"          userId as string,",
+				"          surveyId as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> source6",
 				"filter1 select(mapColumn(",
 				"          id,",
 				"          name,",
@@ -44,7 +168,105 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select1",
-				"source1 filter(roles==\"Admin\") ~> filter1"
+				"source1 filter(roles==\"Admin\") ~> filter1",
+				"source1 filter(roles==\"User\") ~> filter2",
+				"filter2 select(mapColumn(",
+				"          id,",
+				"          name,",
+				"          email,",
+				"          password,",
+				"          designation,",
+				"          roles",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select2",
+				"source2, source3 join(source2@surveyId == source3@surveyId,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join1",
+				"join1 select(mapColumn(",
+				"          id,",
+				"          userId,",
+				"          surveyId = source2@surveyId,",
+				"          surveyId = source3@surveyId,",
+				"          surveyName,",
+				"          surveyDescription,",
+				"          startDate,",
+				"          endDate",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select3",
+				"select3 aggregate(groupBy(userId),",
+				"     surveyId = count(surveyId)) ~> aggregate1",
+				"aggregate1 select(mapColumn(",
+				"          userId,",
+				"          numberofresponse = surveyId",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select4",
+				"source4, source6 join(source4@surveyId == source6@surveyId,",
+				"     joinType:'left',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> join2",
+				"join2 select(mapColumn(",
+				"          surveyId = source4@surveyId,",
+				"          surveyName,",
+				"          surveyDescription,",
+				"          startDate,",
+				"          endDate,",
+				"          id,",
+				"          userId,",
+				"          surveyId = source6@surveyId",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select5",
+				"select5 aggregate(groupBy(surveyId),",
+				"     userresponse = count(userId)) ~> aggregate2",
+				"select1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
+				"select2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink2",
+				"select4 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink3",
+				"aggregate2 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink4"
 			]
 		}
 	}
