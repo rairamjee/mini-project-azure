@@ -34,9 +34,6 @@
 				},
 				{
 					"name": "select2"
-				},
-				{
-					"name": "select3"
 				}
 			],
 			"scriptLines": [
@@ -81,17 +78,6 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> select2",
-				"select2 select(mapColumn(",
-				"          Category,",
-				"          CategoryId,",
-				"          Subcategory,",
-				"          SubcategoryName,",
-				"          SubcategoryId,",
-				"          SeriesCode,",
-				"          SeriesName",
-				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select3",
 				"select1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -103,7 +89,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     errorHandlingOption: 'stopOnFirstError') ~> sink1",
-				"select3 sink(allowSchemaDrift: true,",
+				"select2 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",

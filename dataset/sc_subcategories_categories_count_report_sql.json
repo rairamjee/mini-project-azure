@@ -1,0 +1,16 @@
+{
+	"name": "sc_subcategories_categories_count_report_sql",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sc_sql_LS",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "report",
+			"table": "subcountcat"
+		}
+	}
+}
